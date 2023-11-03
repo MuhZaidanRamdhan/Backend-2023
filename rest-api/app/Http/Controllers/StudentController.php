@@ -11,18 +11,55 @@ class StudentController extends Controller
     {
         $students = Student::all();
 
-        $data = [
-            'message' => 'Get All Students',
-            'data' => $students
-        ];
+        if ($students->isEmpty()) {
 
-        return response()->json($data, 200);
+            $data = [
+                'message' => 'Resource is empty'
+            ];
+
+            return response()->json($data, 204);
+
+        } else {
+
+            $data = [
+                'message' => 'Get All Students',
+                'data' => $students
+            ];
+
+            return response()->json($data, 200);
+        }
+
     }
 
-    // membuat function store
+    public function show($id)
+    {
+        $student = Student::find($id);
+
+        if (!$student) {
+            $data = [
+                'message' => 'Student not found',
+            ];
+
+            return response()->json($data, 404);
+        }
+
+        $data = [
+            'message' => 'Get detail student',
+            'data' => $student,
+        ];
+        return response()->json($data, 200);
+
+    }
+
     public function store(Request $request)
     {
-        // menangkap data request
+        $request->validate([
+            'nama' => 'required',
+            'nim' => 'required',
+            'email' => 'required|email',
+            'jurusan' => 'required'
+        ]);
+
         $input = [
             'nama' => $request->nama,
             'nim' => $request->nim,
@@ -30,7 +67,6 @@ class StudentController extends Controller
             'jurusan' => $request->jurusan
         ];
 
-        // menggunakan model student untuk insert data
         $student = Student::create($input);
 
         $data = [
@@ -38,35 +74,53 @@ class StudentController extends Controller
             'data' => $student,
         ];
 
-        // mengembalikan data (json) dan kode 201
         return response()->json($data, 201);
     }
 
-    // membuat function update
     public function update(Request $request, $id)
     {
-        // menangkap data request 
+        $student = Student::find($id);
+
+
+        if (!$student) {
+
+            $data = [
+                'message' => 'Data not found'
+            ];
+
+            return response()->json($data, 404);
+        }
+
         $input = [
-            'nama' => $request->nama,
-            'nim' => $request->nim,
-            'email' => $request->email,
-            'jurusan' => $request->jurusan
+            'nama' => $request->nama ?? $student->nama,
+            'nim' => $request->nim ?? $student->nim,
+            'email' => $request->email ?? $student->email,
+            'jurusan' => $request->jurusan ?? $student->jurusan
         ];
 
-        // mendapatkan nilai student berdasarkan id
-        $student = Student::where('id', $id)->update($input);
+        $student->update($input);
+
         $data = [
             'message' => 'Student updated successfully',
             'data' => $student
         ];
 
-        // mengembalikan data 
         return response()->json($data, 200);
     }
-    // membuat function delete
+
     public function destroy($id)
     {
         $student = Student::find($id);
+
+        if (!$student) {
+
+            $data = [
+                'message' => 'Data not found'
+            ];
+
+            return response()->json($data, 404);
+        }
+
         $student->delete();
         $data = [
             'message' => 'Student deleted succesfully',

@@ -20,6 +20,7 @@ class AuthController extends Controller
         // menginsert data ke table user
         $user = User::create($input);
 
+        // message
         $data = [
             'message' => 'User created succesfully'
         ];

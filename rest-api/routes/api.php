@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// middleware auth sanctum
 Route::middleware('auth:sanctum')->group(function (){
     #method get all students
     Route::get('/students', [StudentController::class, 'index']);

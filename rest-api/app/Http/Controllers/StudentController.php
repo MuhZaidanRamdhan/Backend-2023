@@ -93,6 +93,7 @@ class StudentController extends Controller
 
         $student->update($input);
 
+        // message
         $data = [
             'message' => 'Student updated successfully',
             'data' => $student

@@ -34,6 +34,28 @@ class StudentController {
       return res.status(422).send(data);
     }
 
+    /*
+      tidak dapat digunakan dikarenakan tipe data dari nim adalah string/varchar bukan integer
+    */
+  
+    // if (!Number.isInteger(nim)) {
+    //   const data = {
+    //     message: "NIM harus berupa angka",
+    //   };
+
+    //   return res.status(422).send(data);
+    // }
+    
+
+     // Handle format email harus benar
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      const data = {
+        message: "Format email tidak valid",
+      };
+
+      return res.status(422).send(data);
+    }
+
     const students = await Student.create(req.body);
 
     const data = {
@@ -56,7 +78,6 @@ class StudentController {
       };
 
       return res.status(200).json(data);
-
     } else {
       const data = {
         message: `Data tidak ditemukan`,
@@ -77,7 +98,6 @@ class StudentController {
       };
 
       res.status(200).json(data);
-
     } else {
       const data = {
         message: `Id tidak ditemukan`,
@@ -98,7 +118,6 @@ class StudentController {
       };
 
       res.status(200).send(data);
-      
     } else {
       const data = {
         message: `data dengan id ${id} tidak ditemukan`,

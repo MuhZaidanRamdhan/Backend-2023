@@ -24,7 +24,7 @@ class StudentController {
   }
 
   async store(req, res) {
-    const { nama, nim, email, jurusan } = req.body;
+    const { nama, nim, email, jurusan } =req.body;
 
     if (!nama || !nim || !email || !jurusan) {
       const data = {
@@ -34,18 +34,14 @@ class StudentController {
       return res.status(422).send(data);
     }
 
-    /*
-      tidak dapat digunakan dikarenakan tipe data dari nim adalah string/varchar bukan integer
-    */
-  
-    // if (!Number.isInteger(nim)) {
-    //   const data = {
-    //     message: "NIM harus berupa angka",
-    //   };
+    // handle NIM harus angka (integer)
+    if (!Number.isInteger(nim)) {
+      const data = {
+        message: "NIM harus berupa angka",
+      };
 
-    //   return res.status(422).send(data);
-    // }
-    
+      return res.status(422).send(data);
+    }
 
      // Handle format email harus benar
     if (!/\S+@\S+\.\S+/.test(email)) {
